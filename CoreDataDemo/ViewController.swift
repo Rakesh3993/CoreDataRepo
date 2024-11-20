@@ -91,6 +91,33 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedPerson = personTitle![indexPath.row]
+        let alert = UIAlertController(title: "Edit Person", message: "Edit Name", preferredStyle: .alert)
+        alert.addTextField()
+        let textField = alert.textFields![0]
+        textField.text = selectedPerson.name
+        let action = UIAlertAction(title: "Save", style: .default) { alertAction in
+            // MARK: - Get the textField for the alert
+            let textField = alert.textFields![0]
+            // MARK: - Edit name property of the person object
+            selectedPerson.name = textField.text
+            
+            // MARK: - Save the data
+            do{
+                try self.context.save()
+            }catch{
+                
+            }
+            
+            // MARK: - Re fetch the Data
+            self.fetchData()
+        }
+        
+        alert.addAction(action)
+        present(alert, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
             
